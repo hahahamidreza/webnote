@@ -54,52 +54,67 @@ require_once("header.php"); ?>
                 </form>
                 <h3>Your notes</h3>
             </div>
+            <div class="d-flex mt-5 flex-wrap">
+                <?php
+                //            $query="SELECT * FROM `user_note` WHERE `user_id` = '$_SESSION[user_id]'";
+                $check = mysqli_query($conn, "SELECT * FROM `user_note` WHERE `user_id` = '$_SESSION[user_id]'");
+                if (mysqli_num_rows($check) > 0) {
+                    while ($note = mysqli_fetch_assoc($check)) {
+                        ?>
+                        <div class="border col-3 rounded-3 rounded-start-0 position-relative p-3 m-1 bg-light">
+                            <div class="position-absolute justify-content-center col-5 gap-1 bg-light bottom-100
+                            start-0 border border-bottom-0 rounded-top-3 d-flex flex-row align-items-center">
+                                <a href="handle.php?type=note_action&note_id=<?php echo $note['note_id']; ?>&submit=delete"
+                                   class="p-2 btn text-decoration-none text-dark">
+                                    <i class="fa-regular fa-trash"></i>
+                                </a>
+                                <a href="handle.php?type=note_action&note_id=<?php echo $note['note_id']; ?>&submit=pin"
+                                   class="p-2 btn btn text-decoration-none text-dark">
+                                    <?php if ($note['pin_unpin']) { ?>
+                                        <i class="fa-solid fa-thumbtack text-warning"></i>
+                                    <?php } else { ?>
+                                        <i class="fa-regular fa-thumbtack text-dark"></i>
+                                    <?php } ?>
+                                </a>
+                                <a href="handle.php?type=note_action&note_id=<?php echo $note['note_id']; ?>&submit=edit"
+                                   class="p-2 btn text-decoration-none text-dark">
+                                    <i class="fa-regular fa-pen"></i>
+                                </a>
+                            </div>
+                            <form class="d-flex position-absolute m-2    top-0 end-0 flex-row gap-1" action="handle.php"
+                                  method="post">
+                                <input type="hidden" value="note_action" name="type">
+                                <input type="hidden" value="<?php echo $note['note_id'] ?>" name="note_id">
+                                <button type="submit" name="submit" value="delete" class="btn">
 
-            <?php
-            //            $query="SELECT * FROM `user_note` WHERE `user_id` = '$_SESSION[user_id]'";
-            $check = mysqli_query($conn, "SELECT * FROM `user_note` WHERE `user_id` = '$_SESSION[user_id]'");
-            if (mysqli_num_rows($check) > 0) {
-                while ($note = mysqli_fetch_assoc($check)) {
-                    ?>
-                    <div class="border rounded position-relative p-3 mb-3 bg-light">
-                        <form class="d-flex position-absolute m-2    top-0 end-0 flex-row gap-1" action="handle.php"
-                              method="post">
-                            <input type="hidden" value="note_action" name="type">
-                            <input type="hidden" value="<?php echo $note['note_id'] ?>" name="note_id">
-                            <button type="submit" name="submit" value="delete" class="btn">
-                                <i class="fa-regular fa-trash"></i>
-                            </button>
-                            <button type="submit" class="btn" name="submit" value="pin/unpin">
-                                <?php if ($note['pin_unpin']) { ?>
-                                    <i class="fa-solid fa-thumbtack text-warning"></i>
-                                <?php } else { ?>
-                                    <i class="fa-regular fa-thumbtack text-dark"></i>
-                                <?php } ?>
-                                <!--                                <i class="fa-regular fa-thumbtack"></i>-->
-                            </button>
-                            <button type="submit" class="btn" name="submit" value="edit">
-                                <i class="fa-regular fa-pen"></i>
-                            </button>
-                        </form>
-                        <h5><?php echo $note['note_tittle'] ?></h5>
-                        <hr>
-                        <p><?php echo $note['note_content'] ?></p>
-                        <hr>
-<!--                        --><?php //if ($note['pin_unpin']) {
-//                            echo "<p class='text-dark'>Pinned</p>";
-//                        } ?>
-                        <!--                        --><?php //echo "uploads/" . $note['img_path']; ?>
-                        <img src="<?php echo base_url() . 'uploads/' . $note['img_path']; ?>" alt=""
-                             class="img-fluid rounded">
+                                </button>
+                                <button type="submit" class="btn" name="submit" value="pin/unpin">
 
-                    </div>
-                    <?php
-                } ?>
+                                    <!--                                <i class="fa-regular fa-thumbtack"></i>-->
+                                </button>
+                                <button type="submit" class="btn" name="submit" value="edit">
 
-            <?php } else {
-                echo '<p class="text-dark">No notes</p>';
-            }
-            ?>
+                                </button>
+                            </form>
+                            <h5><?php echo $note['note_tittle'] ?></h5>
+                            <p><?php echo $note['note_content'] ?></p>
+                            <hr>
+                            <!--                        --><?php //if ($note['pin_unpin']) {
+                            //                            echo "<p class='text-dark'>Pinned</p>";
+                            //                        } ?>
+                            <!--                        --><?php //echo "uploads/" . $note['img_path']; ?>
+                            <img src="<?php echo base_url() . 'uploads/' . $note['img_path']; ?>" alt=""
+                                 class="img-fluid rounded">
+
+                        </div>
+                        <?php
+                    } ?>
+
+                <?php } else {
+                    echo '<p class="text-dark">No notes</p>';
+                }
+                ?>
+            </div>
         </div>
     </div>
 <?php require_once("footer.php");

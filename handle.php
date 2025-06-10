@@ -127,6 +127,40 @@ if (isset($_POST['submit'])) {
 } else {
     header("location:login.php");
 }
+if (isset($_GET['type']) && $_GET['type'] == "note_action" && isset($_GET['submit']) && isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    $note_id = intval($_GET['note_id']);
+    $action = $_GET["submit"];
+
+    $check_note_user = mysqli_query($conn, "SELECT * FROM `user_note` WHERE `note_id` = '$note_id' AND `user_id` = '$user_id'");
+    if (mysqli_num_rows($check_note_user) == 0) {
+        echo 'You cannot do this.';
+        exit;
+    }
+
+    if ($action == "delete") {
+        $delete = mysqli_query($conn, "DELETE FROM `user_note` WHERE `note_id` = '$note_id' AND `user_id` = '$user_id'");
+        if ($delete) {
+            header("Location: panel.php");
+            exit;
+        } else {
+            echo "Delete failed: " . mysqli_error($conn);
+            exit;
+        }
+
+    } elseif ($action == "pin") {
+        $note = mysqli_fetch_assoc($check_note_user);
+        $new_status = ($note['pin_unpin'] == 1) ? 0 : 1;
+        $update = mysqli_query($conn, "UPDATE `user_note` SET `pin_unpin` = '$new_status' WHERE `note_id` = '$note_id'");
+        header("Location: panel.php");
+        exit;
+
+    } elseif ($action == "edit") {
+        $_SESSION['edit_note_id'] = $note_id;
+        header("Location: note_edit.php?note_id=$note_id");
+        exit;
+    }
+}
 
 //note
 

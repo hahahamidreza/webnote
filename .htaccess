@@ -1,0 +1,10 @@
+#RewriteEngine On
+##exclude
+## Allow static files (images, css, js)
+##RewriteCond %{REQUEST_FILENAME} -f [OR]
+##RewriteCond %{REQUEST_FILENAME} -d
+##RewriteRule ^ - [L]
+#RewriteRule \.(js|css)$ - [L]
+##other exclude
+##RewriteRule ^(.+)$ index.php?q=$1 [L,QSA]
+#RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]

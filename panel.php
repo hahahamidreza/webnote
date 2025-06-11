@@ -31,7 +31,7 @@ require_once("header.php"); ?>
     </div>
     <div class="container d-flex position-relative flex-row gap-2 justify-content-center">
         <a class="position-fixed bottom-0 end-0 m-4 text-decoration-none
-        btn btn-warning rounded-circle btn-lg w-auto h-auto z-3" href="new-note.php">
+        btn btn-warning rounded-circle btn-lg w-auto h-auto z-3" href="view-note.php">
             <i class="fa-solid fa-plus"></i>
         </a>
         <div class=" w-100">
@@ -76,7 +76,7 @@ require_once("header.php"); ?>
                                         <i class="fa-regular fa-thumbtack text-dark"></i>
                                     <?php } ?>
                                 </a>
-                                <a href="handle.php?type=note_action&note_id=<?php echo $note['note_id']; ?>&submit=edit"
+                                <a href="view-note.php?type=note_action&note_id=<?php echo $note['note_id']; ?>&submit=edit"
                                    class="p-2 btn text-decoration-none text-dark">
                                     <i class="fa-regular fa-pen"></i>
                                 </a>
@@ -99,10 +99,6 @@ require_once("header.php"); ?>
                             <h5><?php echo $note['note_tittle'] ?></h5>
                             <p><?php echo $note['note_content'] ?></p>
                             <hr>
-                            <!--                        --><?php //if ($note['pin_unpin']) {
-                            //                            echo "<p class='text-dark'>Pinned</p>";
-                            //                        } ?>
-                            <!--                        --><?php //echo "uploads/" . $note['img_path']; ?>
                             <img src="<?php echo base_url() . 'uploads/' . $note['img_path']; ?>" alt=""
                                  class="img-fluid rounded">
 

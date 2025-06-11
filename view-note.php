@@ -1,7 +1,11 @@
 <?php
 require_once 'inc/db.php';
-session_start();
+require_once 'config.php';
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 global $conn;
+global $note;
 
 $is_edit = false;
 $title = '';
@@ -23,37 +27,37 @@ if (isset($_GET['note_id']) && isset($_SESSION['user_id'])) {
     }
 }
 require_once 'config.php';
-require_once 'handle.php'; ?>
+require_once 'header.php';?>
 <div class="container my-5">
     <div class="card shadow-lg rounded-4 p-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="text-primary mb-0"><?php echo $edit_mode ? 'Your Note' : 'Create New Note'; ?></h2>
-            <a href="panel.php" class="btn btn-outline-secondary">← Back</a>
+            <h2 class="text-warning mb-0"><?php echo $is_edit ? 'Your Note' : 'Create New Note'; ?></h2>
+            <a href="panel.php" class="btn btn-outline-warning">Back</a>
         </div>
 
         <form method="post" action="handle.php" enctype="multipart/form-data">
             <input type="hidden" name="type" value="new_note">
-            <?php if ($edit_mode): ?>
+            <?php if ($is_edit): ?>
                 <input type="hidden" name="note_id" value="<?php echo $note_id; ?>">
             <?php endif; ?>
 
             <div class="mb-3">
                 <label for="title" class="form-label fw-bold">Title</label>
-                <input type="text" class="form-control form-control-lg" id="title" name="tittle"
-                       value="<?php echo htmlspecialchars($note['note_tittle']); ?>"
+                <input type="text" class="border-0 form-control form-control-lg" id="title" name="tittle"
+                       value="<?php if(isset($note)){echo htmlspecialchars($note['note_tittle']);} ?>"
                        placeholder="Enter title here..." required>
             </div>
 
             <div class="mb-3">
                 <label for="content" class="form-label fw-bold">Content</label>
-                <textarea class="form-control" name="content" id="content" rows="8"
-                          placeholder="Write your note here..." required><?php echo htmlspecialchars($note['note_content']); ?></textarea>
+                <textarea class="form-control border-0" name="content" id="content" rows="8"
+                          placeholder="Write your note here..." required><?php if(isset($note)){echo htmlspecialchars($note['note_content']);} ?></textarea>
             </div>
 
             <?php if (!empty($note['img_path'])): ?>
                 <div class="mb-3">
                     <label class="form-label fw-bold">Attached Image</label><br>
-                    <img src="uploads/<?php echo $note['img_path']; ?>" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
+                    <img src="<?php echo base_url() . 'uploads/' . $note['img_path']; ?>" class="img-fluid rounded shadow-sm" style="max-height: 300px;">
                 </div>
             <?php endif; ?>
 
@@ -70,11 +74,11 @@ require_once 'handle.php'; ?>
                 </label>
             </div>
 
-            <?php if ($edit_mode && $note['create_date']): ?>
+            <?php if ($is_edit && $note['create_date']): ?>
                 <p class="text-muted small">Created on: <?php echo date("F j, Y, g:i a", strtotime($note['create_date'])); ?></p>
             <?php endif; ?>
 
-            <button type="submit" name="submit" value="save" class="btn btn-primary px-4">Save Note</button>
+            <button type="submit" name="submit" value="save" class="btn btn-warning px-4">Save Note</button>
         </form>
     </div>
 </div>
